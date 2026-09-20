@@ -1,0 +1,6 @@
+torch
+tqdm
+sentencePieces
+transformers
+datasets
+matplotlib
