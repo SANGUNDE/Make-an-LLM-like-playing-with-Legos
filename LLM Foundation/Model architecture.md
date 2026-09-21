@@ -194,6 +194,44 @@ class GroupedQueryAttention(nn.Module):
 
 ```
 
+# Transformer Block
+
+Think of this block as the **engine of our mini‑LLama** — the place where all the Lego pieces we’ve built (layer norm, attention, feedforward layers) finally snap together into a powerful structure.  
+
+A Transformer Block combines:
+- **Multi‑Head Self‑Attention** → lets each token “look around” and understand context from other tokens.  
+- **Feedforward Network (like SwiGLU)** → adds non‑linearity and depth, helping the model learn richer patterns.  
+- **Residual Connections & Layer Normalization** → stabilize training and keep information flowing smoothly.  
+
+By stacking multiple Transformer Blocks, we create a deep architecture capable of modeling complex dependencies in language. Each block is like a Lego brick: simple on its own, but when stacked, they form the towering structure of a large language model.
+
+```python
+class LlamaTransformerBlock(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        self.rms_norm1 = RMSNorm(config)
+        self.rms_norm2 = RMSNorm(config)
+        self.attention = GroupedQueryAttention(config.hidden, 
+                                               config.q_heads, 
+                                               config.kv_heads, 
+                                               dropout = 0.1)
+        self.ffn = SwiGLUFFN(config)
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        # RMSNorm + Attention
+        residual = x
+        x = self.rms_norm1(x)
+        x = self.attention(x)
+        x = x + residual
+
+        # RMSNorm + Attention
+        residual = x 
+        x = self.rms_norm2(x)
+        x = self.ffn(x)
+        x = x + residual
+        return x
+```
+- very simple right? ;-)
 - we have reached the end of the second part.
 - for further study read the articles below:
 - RoPE: https://outcomeschool.com/blog/math-behind-rope-rotary-position-embedding
