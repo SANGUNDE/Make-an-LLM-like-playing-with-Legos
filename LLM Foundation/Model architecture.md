@@ -196,7 +196,7 @@ class GroupedQueryAttention(nn.Module):
 
 # Transformer Block
 
-Think of this block as the **engine of our mini‑LLama** — the place where all the Lego pieces we’ve built (layer norm, attention, feedforward layers) finally snap together into a powerful structure.  
+Think of this block as the **engine of our mini‑LLama** — the place where all the Lego pieces we’ve built (rms norm, attention, feedforward layers) finally snap together into a powerful structure.  
 
 A Transformer Block combines:
 - **Multi‑Head Self‑Attention** → lets each token “look around” and understand context from other tokens.  
